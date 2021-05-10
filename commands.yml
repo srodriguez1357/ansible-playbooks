@@ -1,0 +1,28 @@
+---
+- name: Agregar MOTD, SNMP strings, cambiar zona horaria y guardar configs
+  hosts: ARLAB
+  gather_facts: no
+
+  tasks:
+
+  - name: Agregar MOTD
+    ios_banner:
+     banner: login
+     text: |
+       Prohibido el acceso a usuarios no autorizados. Toda actividad esta siendo monitoreada
+     state: present
+
+  - name: Agregar SNMP
+    ios_config:
+     lines:
+      - snmp-server community ar-ro RO
+      - snmp-server community ar-rw rw
+
+  - name: Cambiar zona horaria
+    ios_config:
+     lines:
+      - clock timezone CST -6 0
+
+  - name: Guardar configuracion
+    ios_config:
+     save_when: changed

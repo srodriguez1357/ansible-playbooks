@@ -1,0 +1,13 @@
+---
+- name: Agregar EIGRP
+  hosts: ARLAB
+
+  tasks:
+  - name: Agregar SNMP
+    ios_config:
+     lines:
+      - router eigrp 6
+      - network 172.22.6.0
+      - network 172.22.6.8
+      - network 172.22.6.16
+      - network 10.6.0.0

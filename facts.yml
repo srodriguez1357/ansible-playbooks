@@ -1,0 +1,21 @@
+---
+- name: Obtener version y numero de serie
+  hosts: ARLAB
+  gather_facts: no
+
+  tasks:
+  - name: Obtener informacion de los routers
+    ios_facts:
+
+  - name: Mostrar el tipo de OS que tiene el router
+    debug:
+     msg: "El tipo de Os de {{ ansible_net_hostname }} es {{ ansible_net_iostype }}"
+
+  - name: Mostrar version
+    debug:
+     msg: "La version de IOS es: {{ ansible_net_version }}"
+
+  - name: Mostrar numero de serie
+    debug:
+     msg: "El numero de serie es: {{ ansible_net_serialnum }}"
+

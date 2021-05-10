@@ -1,0 +1,14 @@
+---
+- name: Configurar EIGRP en RTR3
+- hosts: ARLAB
+
+  tasks:
+    - name: Configure named EIGRP on R1
+      ios_config:
+        lines:
+          - network 172.22.6.0
+          - network 172.22.6.16
+          - network 10.6.3.0 
+      parents:
+          - router eigrp 6
+          - address-family ipv4 unicast auto 1

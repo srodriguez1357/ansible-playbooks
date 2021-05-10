@@ -1,0 +1,18 @@
+---
+- name: Obtener version y numero de serie
+  hosts: ARLAB
+  gather_facts: no
+
+  tasks:
+  - name: Obtener informacion de los routers
+    ios_facts:
+
+  - name: Guardar informacion en un archivo
+    copy:
+     dest: "{{ inventory_hostname }}-info.txt"
+     content: |
+      "Destalle de {{ ansible_net_hostname }}"
+      "Tipo de OS: {{ ansible_net_iostype }}"
+      "Version de IOS: {{ ansible_net_version }}"
+      "Numero de Serie: {{ ansible_net_serialnum }}"
+

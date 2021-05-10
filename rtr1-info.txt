@@ -1,0 +1,4 @@
+"Destalle de R1"
+"Tipo de OS: IOS"
+"Version de IOS: 15.2(4)S7"
+"Numero de Serie: 4279256517"

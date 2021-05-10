@@ -1,0 +1,11 @@
+---
+- name: Agregar EIGRP
+  hosts: ARLAB
+
+  tasks:
+  
+  - name: rtr1
+  - hosts: rtr1
+    include: rtr1-eigrp.yml  
+
+  
