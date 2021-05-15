@@ -1,0 +1,71 @@
+---
+- name: Agregar MOTD, SNMP strings, cambiar zona horaria y guardar configs
+  hosts: ARLAB
+  gather_facts: no
+
+  tasks:
+
+  - name: Agregar MOTD
+    ios_banner:
+     banner: login
+     text: |
+       Prohibido el acceso a usuarios no autorizados. Toda actividad esta siendo monitoreada
+     state: present
+
+  - name: Agregar SNMP
+    ios_config:
+     lines:
+      - snmp-server community ar-ro RO
+
+  - name: TIme zone correct
+    ios_config:
+     lines:
+      - clock timezone CST -6 0
+  
+  - name: Logging to Syslog Server
+    ios_config:
+     lines:
+      - service timestamps log datetime show-timezone
+      - logging 192.168.73.130
+      - logging trap 0
+      - logging facility local5
+
+  - name: configure device with config
+    cli_config:
+      config: "{{ lookup('template', 'template.j2') }}"
+
+  - name: Delete OSPF for ansible reasons
+    ios_config:
+     lines:
+      - no router ospf 6
+
+  - name: Agregar OSPF
+    ios_config:
+     lines:
+      - router ospf 6
+      - network 6.6.6.1 0.0.0.0 area 0
+      - network 6.6.6.2 0.0.0.0 area 0
+      - network 6.6.6.3 0.0.0.0 area 0
+      - network 10.6.1.0 0.0.0.255 area 0
+      - network 10.6.2.0 0.0.0.255 area 0
+      - network 10.6.3.0 0.0.0.255 area 0
+      - network 172.22.6.0 0.0.0.7 area 0
+      - network 172.22.6.8 0.0.0.7 area 0
+      - network 172.22.6.16 0.0.0.7 area 0
+      - network 192.168.73.0 0.0.0.255 area 0
+
+  - name: AAA configure
+    ios_config:
+     lines:
+      - aaa authentication login default group TACACS_ARLAB local
+      - aaa authentication enable default group TACACS_ARLAB enable
+      - aaa authorization exec default group TACACS_ARLAB local
+      - aaa authorization commands 1 default group TACACS_ARLAB local
+      - aaa authorization commands 15 default group TACACS_ARLAB local
+      - aaa accounting commands 1 default start-stop group TACACS_ARLAB
+      - aaa accounting commands 15 default start-stop group TACACS_ARLAB
+
+  - name: Guardar configuracion
+    ios_config:
+     save_when: changed
+
